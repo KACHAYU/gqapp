@@ -20,13 +20,15 @@ class HomeScreen extends Component {
 
     this.state = {
       navigation : this.props.navigation,
-      cid : 2
+      cid : 2,
+      title : '单品搭配'
     };
+
   }
 
-  static navigationOptions = {
-    title:'单品搭配'
-  }
+  static navigationOptions = ({navigation}) => ({
+    title: '单品搭配'
+  })
 
   render() {
     return (
