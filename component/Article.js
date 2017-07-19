@@ -6,6 +6,7 @@ import {
   View,
   Image,
   ScrollView,
+  Animated,
   WebView
 } from 'react-native';
 
@@ -14,6 +15,7 @@ export default class Home extends Component {
   	super(props);
   	this.state = {
   		data: {},
+      scaleAnim:new Animated.Value(1),
       height:0
   	}
   }
@@ -32,6 +34,28 @@ export default class Home extends Component {
     //console.log(this.props.data)
   }
 
+  componentDidMount() {
+    Animated.sequence([
+      Animated.timing(
+        this.state.scaleAnim,
+        {
+          toValue:1.3,
+          duration:350
+        }
+      ),
+      Animated.timing(
+        this.state.scaleAnim,
+        {
+          toValue:1,
+          duration:350
+        }
+      )
+    ]).start();
+  }
+  scrollTop(e){
+    console.log(e)
+  }
+
   render() {
     const {template} = this.state.data;
     //const template = "http://www.baidu.com";
@@ -39,8 +63,11 @@ export default class Home extends Component {
         tpl = tpl.replace(/<\/title>/g,'<\/title><script>window.onload=function(){document.title = document.body.clientHeight;}<\/script>');
     //console.log(tpl);
     return (
-      <ScrollView style = {styles.container} >
-        <Image source = {{uri:this.state.data.thumbnail_image}} style = {styles.thumbnail} />
+      <ScrollView style = {styles.container} onScroll = {(e)=>this.scrollTop(e)}>
+        <Animated.Image source = {{uri:this.state.data.thumbnail_image}} style = {{
+          height:250,
+          transform:[{scale:this.state.scaleAnim}]
+        }} />
         <View style = {styles.column}>
           <Text style = {styles.conlumnText}>{this.props.data.colname}</Text>
         </View>
