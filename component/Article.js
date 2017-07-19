@@ -34,26 +34,27 @@ export default class Home extends Component {
     //console.log(this.props.data)
   }
 
-  componentDidMount() {
-    Animated.sequence([
-      Animated.timing(
-        this.state.scaleAnim,
-        {
-          toValue:1.3,
-          duration:350
-        }
-      ),
-      Animated.timing(
-        this.state.scaleAnim,
-        {
-          toValue:1,
-          duration:350
-        }
-      )
-    ]).start();
-  }
-  scrollTop(e){
-    console.log(e)
+  scrollTop(e) {
+    let t = e.nativeEvent.contentOffset.y;
+    if(t< 0){
+      Animated.sequence([
+        Animated.timing(
+          this.state.scaleAnim,
+          {
+            toValue:1.3,
+            duration:350
+          }
+        ),
+        Animated.timing(
+          this.state.scaleAnim,
+          {
+            toValue:1,
+            duration:350
+          }
+        )
+      ]).start();
+    }
+    console.log(t)
   }
 
   render() {
@@ -79,7 +80,7 @@ export default class Home extends Component {
           style  = {{height:this.state.height,flex:1}} 
           onNavigationStateChange = {(title) =>{
             this.setState({
-              height:500
+              height:5000
             });
             //console.log(title.title)
           }} 
