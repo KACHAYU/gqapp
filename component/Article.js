@@ -59,10 +59,7 @@ export default class Home extends Component {
 
   render() {
     const {template} = this.state.data;
-    //const template = "http://www.baidu.com";
-    let tpl = template || '';
-        tpl = tpl.replace(/<\/title>/g,'<\/title><script>window.onload=function(){document.title = document.body.clientHeight;}<\/script>');
-    //console.log(tpl);
+    
     return (
       <ScrollView style = {styles.container} onScroll = {(e)=>this.scrollTop(e)}>
         <Animated.Image source = {{uri:this.state.data.thumbnail_image}} style = {{
@@ -80,7 +77,7 @@ export default class Home extends Component {
           style  = {{height:this.state.height,flex:1}} 
           onNavigationStateChange = {(title) =>{
             this.setState({
-              height:5000
+              height:3000
             });
             //console.log(title.title)
           }} 
