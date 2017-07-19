@@ -54,7 +54,7 @@ export default class Home extends Component {
         )
       ]).start();
     }
-    console.log(t)
+    //console.log(t)
   }
 
   render() {
@@ -62,10 +62,12 @@ export default class Home extends Component {
     
     return (
       <ScrollView style = {styles.container} onScroll = {(e)=>this.scrollTop(e)}>
+        <View style = {styles.thumbnail}>
         <Animated.Image source = {{uri:this.state.data.thumbnail_image}} style = {{
           height:250,
           transform:[{scale:this.state.scaleAnim}]
         }} />
+        </View>
         <View style = {styles.column}>
           <Text style = {styles.conlumnText}>{this.props.data.colname}</Text>
         </View>
@@ -93,7 +95,8 @@ const styles = StyleSheet.create({
     backgroundColor:'white'
   },
   thumbnail:{
-    height:250
+    height:250,
+    overflow:'hidden'
   },
   column:{
     backgroundColor:'red',
