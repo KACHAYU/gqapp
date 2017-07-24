@@ -54,7 +54,7 @@ export default class Home extends Component {
         )
       ]).start();
     }
-    //console.log(t)
+    console.log(t)
   }
 
   render() {
@@ -76,7 +76,7 @@ export default class Home extends Component {
         </View>
         <WebView 
           source = {{html:template}} 
-          style  = {{height:this.state.height,flex:1}} 
+          style  = {{height:this.state.height,flex:1,marginLeft:20,marginRight:20}} 
           onNavigationStateChange = {(title) =>{
             this.setState({
               height:3000
