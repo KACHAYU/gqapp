@@ -95,7 +95,7 @@ export default class Home extends Component {
       scrollY : y
     }); 
     
-    console.log(t)
+    //console.log(t)
   }
 
   render() {
