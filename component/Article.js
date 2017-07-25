@@ -15,7 +15,10 @@ export default class Home extends Component {
   	super(props);
   	this.state = {
   		data: {},
-      scaleAnim:new Animated.Value(1),
+      scaleAnimHeight:new Animated.Value(250),
+      scaleAnim :new Animated.Value(1),
+      scrollY:0,
+      scrollFlag:true,
       height:0
   	}
   }
@@ -34,26 +37,64 @@ export default class Home extends Component {
     //console.log(this.props.data)
   }
 
+  animateCallback(){
+    setTimeout(function(){
+      this.setState({
+        scrollFlag:true
+      });
+    }.bind(this), 600);
+  }
+
   scrollTop(e) {
     let t = e.nativeEvent.contentOffset.y;
-    if(t< 0){
+    if(t< 0 && this.state.scrollFlag){
+
+      this.setState({
+        scrollFlag:false
+      });
+
       Animated.sequence([
-        Animated.timing(
-          this.state.scaleAnim,
-          {
-            toValue:1.3,
-            duration:350
-          }
-        ),
-        Animated.timing(
-          this.state.scaleAnim,
-          {
-            toValue:1,
-            duration:350
-          }
-        )
-      ]).start();
+        Animated.parallel([
+          Animated.timing(
+            this.state.scaleAnimHeight,
+            {
+              toValue:300,
+              duration:200
+            }
+          ),
+          Animated.timing(
+            this.state.scaleAnim,
+            {
+              toValue:1.3,
+              duration:250
+            }
+          ),
+        ]),
+        Animated.parallel([
+          Animated.timing(
+            this.state.scaleAnimHeight,
+            {
+              toValue:250,
+              duration:200
+            }
+          ),
+          Animated.timing(
+            this.state.scaleAnim,
+            {
+              toValue:1,
+              duration:250
+            }
+          ),
+        ])
+      ]).start(() => this.animateCallback());
     }
+    
+    let y = t < 0 ? 0 : t >250? -250 : -t;
+    
+    this.setState({
+      scrollY : y
+    }); 
+    
     console.log(t)
   }
 
@@ -61,31 +102,47 @@ export default class Home extends Component {
     const {template} = this.state.data;
     
     return (
-      <ScrollView style = {styles.container} onScroll = {(e)=>this.scrollTop(e)}>
-        <View style = {styles.thumbnail}>
-        <Animated.Image source = {{uri:this.state.data.thumbnail_image}} style = {{
-          height:250,
-          transform:[{scale:this.state.scaleAnim}]
-        }} />
-        </View>
-        <View style = {styles.column}>
-          <Text style = {styles.conlumnText}>{this.props.data.colname}</Text>
-        </View>
-        <View style = {styles.title}>
-          <Text style = {styles.titleText}>{this.props.data.title}</Text>
-        </View>
-        <WebView 
-          source = {{html:template}} 
-          style  = {{height:this.state.height,flex:1,marginLeft:20,marginRight:20}} 
-          onNavigationStateChange = {(title) =>{
-            this.setState({
-              height:3000
-            });
-            //console.log(title.title)
-          }} 
-          ref = {(ref) => this.webview = ref} 
-        />
-      </ScrollView>
+      <View>
+        <Animated.View style = {{
+          backgroundColor:'white',
+          overflow:'hidden',
+          height:this.state.scaleAnimHeight,
+          transform:[{translateY:this.state.scrollY}]
+        }} >
+          <Animated.Image source = {{uri:this.state.data.thumbnail_image}} style = {{
+            height:250,
+            transform:[{scale:this.state.scaleAnim}]
+          }} />
+        </Animated.View>
+        <ScrollView style = {{
+          backgroundColor:'white',
+          transform:[{translateY:this.state.scrollY}]
+        }} onScroll = {(e)=>this.scrollTop(e)} 
+        scrollEventThrottle={1} >
+          <View style = {styles.column}>
+            <Text style = {styles.conlumnText}>{this.props.data.colname}</Text>
+          </View>
+          <View style = {styles.title}>
+            <Text style = {styles.titleText}>{this.props.data.title}</Text>
+          </View>
+          <WebView 
+            source = {{html:template}} 
+            style  = {{
+              height:this.state.height,
+              flex:1,
+              marginLeft:20,
+              marginRight:20
+            }} 
+            onNavigationStateChange = {(title) =>{
+              this.setState({
+                height:3000
+              });
+              //console.log(title.title)
+            }} 
+            ref = {(ref) => this.webview = ref} 
+          />
+        </ScrollView>
+      </View>
     );
   }
 }
